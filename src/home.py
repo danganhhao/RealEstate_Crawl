@@ -5,6 +5,40 @@ import pandas as pd
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
+data = {
+    'title': [],  # require
+    'estateType': [],  # require
+    'expireAfter': [],  # require
+    'project': [],
+    'province': [],  # require
+    'district': [],  # require
+    'ward': [],
+    'street': [],
+    'numberOfRoom': [],
+    'description': [],  # require
+    'image': [],
+    'detail': [],
+    'price': [],
+    'area': [],
+    'contact': [],
+    'transaction': [],  # require
+    'addressDetail': [],
+    'lat': [],
+    'lng': [],
+}
+
+
+def export_table_and_print(m_data):
+    table = pd.DataFrame(m_data, columns=[
+        'title', 'estateType', 'expireAfter', 'project', 'province', 'district', 'ward', 'street',
+        'numberOfRoom', 'description', 'image', 'detail', 'price', 'area', 'contact', 'transaction',
+        'addressDetail', 'lat', 'lng'])
+    table.index = table.index + 1
+    table.to_csv('realestate_data.csv',
+                 sep=',', encoding='utf-8', index=False)
+    print('Scraping done. Here are the results:')
+    print(table)
+
 
 sources = requests.get(BASE_URL)
 if sources.status_code == requests.codes.ok:
@@ -50,7 +84,29 @@ for i in range(1, total_page):
                     'div', {"id": "product-detail"}
                 )
                 title = product_detail.find('div', class_='pm-title').h1.text
-                print(title)
+                data['title'].append(title)
+                data['estateType'].append('')
+                data['expireAfter'].append('')
+                data['project'].append('')
+                data['province'].append('')
+                data['district'].append('')
+                data['ward'].append('')
+                data['street'].append('')
+                data['numberOfRoom'].append('')
+                data['description'].append('')
+                data['image'].append('')
+                data['detail'].append('')
+                data['price'].append('')
+                data['area'].append('')
+                data['contact'].append('')
+                data['transaction'].append('')
+                data['addressDetail'].append('')
+                data['lat'].append('')
+                data['lng'].append('')
+
+                # print(title)
+
+export_table_and_print(data)
 
 
 #
@@ -64,32 +120,6 @@ for i in range(1, total_page):
 #     print('Scraping done. Here are the results:')
 #     print(table)
 #
-#
-# def get_cd_attributes(cd):
-#     # Getting the CD attributes
-#     image = cd.find('img', class_='ProductImage')['src']
-#     name = cd.find('h2').find('a').text
-#     url = cd.find('h2').find('a')['href']
-#     url = base_url + url
-#     artist = cd.find('li', class_="Artist")
-#     artist = artist.find('a').text if artist else ''
-#     binding = cd.find('li', class_="Binding")
-#     binding = binding.text.replace('Binding: ', '') if binding else ''
-#     format_album = cd.find('li', class_="Format")
-#     format_album = format_album.text.replace('Format: ', '') if format_album else ''
-#     release_date = cd.find('li', class_="ReleaseDate")
-#     release_date = release_date.text.replace('Released: ', '') if release_date else ''
-#     label = cd.find('li', class_="Label")
-#     label = label.find('a').text if label else ''
-#     # Store the values into the 'data' object
-#     data['Image'].append(image)
-#     data['Name'].append(name)
-#     data['URL'].append(url)
-#     data['Artist'].append(artist)
-#     data['Binding'].append(binding)
-#     data['Format'].append(format_album)
-#     data['Release Date'].append(release_date)
-#     data['Label'].append(label)
 #
 #
 # # HTTP GET requests
