@@ -1,10 +1,7 @@
-import re
-
-from bs4 import BeautifulSoup
+import json
 import requests
-import lxml
 import pandas as pd
-
+from bs4 import BeautifulSoup
 from src.define import *
 from src.convert_data_helper import *
 
@@ -31,6 +28,33 @@ data = {
     'lat': [],
     'lng': [],
 }
+
+with open('location.json') as f:
+    location = json.load(f)
+
+
+def convertProvince(m_province):
+    for m_location in location:
+        if m_province == m_location['name']:
+            return m_location['id']
+        if m_province == u'Hà Nội':
+            m_province = u'Hà Nội'
+        if m_province == m_location['name']:
+            return m_location['id']
+
+
+def convertDistrict(m_province, m_district):
+    for m_location in location:
+        if m_province == m_location['name']:
+            for m_d in m_location['districts']:
+                if m_district == m_d['name']:
+                    return m_d['id']
+        if m_province == u'Hà Nội':
+            m_province = u'Hà Nội'
+        if m_province == m_location['name']:
+            for m_d in m_location['districts']:
+                if m_district == m_d['name']:
+                    return m_d['id']
 
 
 def export_table_and_print(m_data):
@@ -130,8 +154,10 @@ for i in range(1, total_page):
                         address = value
                         address = address.replace('\r\n', '')
                         address = address.split(', ')
-                        province = address[len(address) - 1]
-                        district = address[len(address) - 2]
+                        province_t = address[len(address) - 1]
+                        province = convertProvince(province_t)
+                        district_t = address[len(address) - 2]
+                        district = convertDistrict(province_t, district_t)
 
                 title = product_detail.find('div', class_='pm-title').h1.text
                 area = priceAndArea.find_all(lambda tag: tag.name == 'span' and tag.get('class') == ['gia-title'])[0]. \
