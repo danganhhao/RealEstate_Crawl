@@ -1,9 +1,12 @@
+import re
+
 from bs4 import BeautifulSoup
 import requests
 import lxml
 import pandas as pd
 
 from src.define import *
+from src.convert_data_helper import *
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
@@ -119,9 +122,10 @@ for i in range(1, total_page):
                     key = item_content.find('div', class_='left').text
                     value = item_content.find('div', class_='right').text
                     if key == ESTATE_TYPE:
-                        estateType = value
+                        estateType = convertEstateType(value)
                     if key == NUMBER_OF_ROOM:
-                        numberOfRoom = value
+                        value = value.split('\r\n')
+                        numberOfRoom = value[1]
                     if key == ADDRESS:
                         address = value
                         address = address.replace('\r\n', '')
@@ -130,9 +134,12 @@ for i in range(1, total_page):
                         district = address[len(address) - 2]
 
                 title = product_detail.find('div', class_='pm-title').h1.text
-                price = priceAndArea.find('span', class_='gia-title mar-right-15').find('strong').text
-                area = priceAndArea.find_all(lambda tag: tag.name == 'span' and tag.get('class') == ['gia-title'])[0].\
+                area = priceAndArea.find_all(lambda tag: tag.name == 'span' and tag.get('class') == ['gia-title'])[0]. \
                     find('strong').text
+                area = convertArea(area)
+                price = priceAndArea.find('span', class_='gia-title mar-right-15').find('strong').text
+                price = convertPrice(price, area)
+
                 description = product_detail.find('div', class_='pm-desc').text
                 image = product_detail.find(
                     'div', class_='pm-middle-content').find(
@@ -160,6 +167,6 @@ for i in range(1, total_page):
                 data['lat'].append('')
                 data['lng'].append('')
 
-                # print()
+                print('%s - %s' % ('Done', title))
 
 export_table_and_print(data)
