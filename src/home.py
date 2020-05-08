@@ -177,9 +177,9 @@ for i in range(1, total_page):
                         address = address.replace('\r\n', '')
                         address = address.split(', ')
                         province_t = address[len(address) - 1]
-                        province = convertProvince(province_t)
+                        province = int(convertProvince(province_t))
                         district_t = address[len(address) - 2]
-                        district = convertDistrict(province_t, district_t)
+                        district = int(convertDistrict(province_t, district_t))
 
                 title = product_detail.find('div', class_='pm-title').h1.text
                 area = priceAndArea.find_all(lambda tag: tag.name == 'span' and tag.get('class') == ['gia-title'])[0]. \
