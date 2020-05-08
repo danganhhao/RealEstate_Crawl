@@ -210,6 +210,12 @@ for i in range(1, total_page):
                 except:
                     pass
 
+                # check bug, if call not get province, district data
+                if district == 1:
+                    province = 1
+                    lat = ''
+                    lng = ''
+
                 data['title'].append(title)
                 data['estateType'].append(estateType)
                 data['expireAfter'].append('365')
