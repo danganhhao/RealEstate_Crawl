@@ -1,0 +1,5 @@
+PRICE = u'Giá'
+AREA = u'Diện tích'
+ESTATE_TYPE = u'\r\nLoại tin rao\r\n'
+ADDRESS = u'\r\nĐịa chỉ\r\n'
+NUMBER_OF_ROOM = u'\r\nSố phòng ngủ\r\n'

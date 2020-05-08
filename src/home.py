@@ -3,6 +3,8 @@ import requests
 import lxml
 import pandas as pd
 
+from src.define import *
+
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
 data = {
@@ -78,68 +80,86 @@ for i in range(1, total_page):
             detail_sources = requests.get(child_url)
             if detail_sources.status_code == requests.codes.ok:
                 detail_soup = BeautifulSoup(detail_sources.text, 'lxml')
+                # ----------------------
+                title = ''
+                estateType = ''
+                estateAfter = ''
+                project = ''
+                province = ''
+                district = ''
+                ward = ''
+                street = ''
+                numberOfRoom = ''
+                description = ''
+                image = ''
+                detail = ''
+                price = ''
+                area = ''
+                contact = ''
+                transaction = ''
+                addressDetail = ''
+                lat = ''
+                lng = ''
+
+                # ----------------------
                 product_detail = detail_soup.find(
                     'div', class_='body-left').find(
                     'div', class_='container-default').find(
                     'div', {"id": "product-detail"}
                 )
+
+                priceAndArea = product_detail.find('div', class_='kqchitiet')
+
+                product_detail_content = product_detail.find(
+                    'div', class_='div-table').find(
+                    'div', class_='table-detail'
+                )
+                list_item_content = product_detail_content.findAll('div', class_='row')
+                for item_content in list_item_content:
+                    key = item_content.find('div', class_='left').text
+                    value = item_content.find('div', class_='right').text
+                    if key == ESTATE_TYPE:
+                        estateType = value
+                    if key == NUMBER_OF_ROOM:
+                        numberOfRoom = value
+                    if key == ADDRESS:
+                        address = value
+                        address = address.replace('\r\n', '')
+                        address = address.split(', ')
+                        province = address[len(address) - 1]
+                        district = address[len(address) - 2]
+
                 title = product_detail.find('div', class_='pm-title').h1.text
+                price = priceAndArea.find('span', class_='gia-title mar-right-15').find('strong').text
+                area = priceAndArea.find_all(lambda tag: tag.name == 'span' and tag.get('class') == ['gia-title'])[0].\
+                    find('strong').text
+                description = product_detail.find('div', class_='pm-desc').text
+                image = product_detail.find(
+                    'div', class_='pm-middle-content').find(
+                    'div', class_='img-map').find(
+                    'div', class_='photo').find(
+                    'div', class_='show-img').find('img', src=True)['src']
+
                 data['title'].append(title)
-                data['estateType'].append('')
-                data['expireAfter'].append('')
+                data['estateType'].append(estateType)
+                data['expireAfter'].append('365')
                 data['project'].append('')
-                data['province'].append('')
-                data['district'].append('')
+                data['province'].append(province)
+                data['district'].append(district)
                 data['ward'].append('')
                 data['street'].append('')
-                data['numberOfRoom'].append('')
-                data['description'].append('')
-                data['image'].append('')
+                data['numberOfRoom'].append(numberOfRoom)
+                data['description'].append(description)
+                data['image'].append(image)
                 data['detail'].append('')
-                data['price'].append('')
-                data['area'].append('')
+                data['price'].append(price)
+                data['area'].append(area)
                 data['contact'].append('')
-                data['transaction'].append('')
+                data['transaction'].append('6')
                 data['addressDetail'].append('')
                 data['lat'].append('')
                 data['lng'].append('')
 
-                # print(title)
+                # print()
 
 export_table_and_print(data)
-
-
-#
-# def export_table_and_print(data):
-#     table = pd.DataFrame(data, columns=[
-#         'Image', 'Name', 'URL', 'Artist', 'Binding', 'Format', 'Release Date', 'Label'])
-#     table.index = table.index + 1
-#     clean_band_name = band_name.lower().replace(' ', '_')
-#     table.to_csv(f'{clean_band_name}_albums.csv',
-#                  sep=',', encoding='utf-8', index=False)
-#     print('Scraping done. Here are the results:')
-#     print(table)
-#
-#
-#
-# # HTTP GET requests
-# page = requests.get(search_url)
-# # Checking if we successfully fetched the URL
-# if page.status_code == requests.codes.ok:
-#     bs = BeautifulSoup(page.text, 'lxml')
-#     # Fetching all items
-#     list_all_cd = bs.findAll('li', class_='ResultItem')
-#     data = {
-#         'Image': [],
-#         'Name': [],
-#         'URL': [],
-#         'Artist': [],
-#         'Binding': [],
-#         'Format': [],
-#         'Release Date': [],
-#         'Label': [],
-#     }
-#
-#     for cd in list_all_cd:
-#         get_cd_attributes(cd)
-# export_table_and_print(data)
