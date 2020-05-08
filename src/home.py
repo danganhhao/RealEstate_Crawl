@@ -57,13 +57,13 @@ def convertDistrict(m_province, m_district):
                     return m_d['id']
 
 
-def export_table_and_print(m_data):
+def export_table_and_print(m_data, index):
     table = pd.DataFrame(m_data, columns=[
         'title', 'estateType', 'expireAfter', 'project', 'province', 'district', 'ward', 'street',
         'numberOfRoom', 'description', 'image', 'detail', 'price', 'area', 'contact', 'transaction',
         'addressDetail', 'lat', 'lng'])
     table.index = table.index + 1
-    table.to_csv('realestate_data.csv',
+    table.to_csv(f'realestate_data_{index}.csv',
                  sep=',', encoding='utf-8', index=False)
     print('Scraping done. Here are the results:')
     print(table)
@@ -195,4 +195,6 @@ for i in range(1, total_page):
 
                 print('%s - %s' % ('Done', title))
 
-export_table_and_print(data)
+    export_table_and_print(data, i)
+
+# export_table_and_print(data)
