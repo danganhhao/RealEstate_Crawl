@@ -34,6 +34,7 @@ with open('location.json') as f:
 
 
 def convertProvince(m_province):
+    # TODO: check null
     for m_location in location:
         if m_province == m_location['name']:
             return m_location['id']
@@ -41,9 +42,11 @@ def convertProvince(m_province):
             m_province = u'Hà Nội'
         if m_province == m_location['name']:
             return m_location['id']
+    return 1
 
 
 def convertDistrict(m_province, m_district):
+    # TODO: check null
     for m_location in location:
         if m_province == m_location['name']:
             for m_d in m_location['districts']:
@@ -55,6 +58,7 @@ def convertDistrict(m_province, m_district):
             for m_d in m_location['districts']:
                 if m_district == m_d['name']:
                     return m_d['id']
+    return 1
 
 
 def export_table_and_print(m_data, index):
@@ -228,11 +232,10 @@ for i in range(1, total_page):
 
                 print('------- Done - %s' % title)
 
-    if i % 10 == 0:
+    if i % 3 == 0:
         export_table_and_print(data, i)
         free()
         print('***** Done page - %s' % i)
         break
 
-# TODO: Clear old data when export done
 # export_table_and_print(data)
