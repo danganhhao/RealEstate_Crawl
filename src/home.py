@@ -69,6 +69,28 @@ def export_table_and_print(m_data, index):
     print(table)
 
 
+def free():
+    data['title'].clear()
+    data['estateType'].clear()
+    data['expireAfter'].clear()
+    data['project'].clear()
+    data['province'].clear()
+    data['district'].clear()
+    data['ward'].clear()
+    data['street'].clear()
+    data['numberOfRoom'].clear()
+    data['description'].clear()
+    data['image'].clear()
+    data['detail'].clear()
+    data['price'].clear()
+    data['area'].clear()
+    data['contact'].clear()
+    data['transaction'].clear()
+    data['addressDetail'].clear()
+    data['lat'].clear()
+    data['lng'].clear()
+
+
 sources = requests.get(BASE_URL)
 if sources.status_code == requests.codes.ok:
     soup = BeautifulSoup(sources.text, 'lxml')
@@ -172,6 +194,11 @@ for i in range(1, total_page):
                     'div', class_='img-map').find(
                     'div', class_='photo').find(
                     'div', class_='show-img').find('img', src=True)['src']
+                parent_lat_lng = detail_soup.find(
+                    'div', class_='body-left').find(
+                    'div', class_='container-default')
+                lat = parent_lat_lng.find('input', {"name": "ctl00$LeftMainContent$_productDetail$hdLat"}).get('value')
+                lng = parent_lat_lng.find('input', {"name": "ctl00$LeftMainContent$_productDetail$hdLong"}).get('value')
 
                 data['title'].append(title)
                 data['estateType'].append(estateType)
@@ -190,11 +217,16 @@ for i in range(1, total_page):
                 data['contact'].append('')
                 data['transaction'].append('6')
                 data['addressDetail'].append('')
-                data['lat'].append('')
-                data['lng'].append('')
+                data['lat'].append(lat)
+                data['lng'].append(lng)
 
-                print('%s - %s' % ('Done', title))
+                print('------- Done - %s' % title)
+                break
 
-    export_table_and_print(data, i)
+    if i % 10 == 0:
+        export_table_and_print(data, i)
+        free()
+        print('***** Done page - %s' % i)
 
+# TODO: Clear old data when export done
 # export_table_and_print(data)
