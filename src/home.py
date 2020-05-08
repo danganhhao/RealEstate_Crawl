@@ -103,7 +103,7 @@ if sources.status_code == requests.codes.ok:
     total_page = int(int(total) / 20)
 
 ### TEST TEST ###
-total_page = 2
+total_page = 12
 
 for i in range(1, total_page):
     URL = f'https://batdongsan.com.vn/nha-dat-ban/p{i}'
@@ -189,16 +189,22 @@ for i in range(1, total_page):
                 price = convertPrice(price, area)
 
                 description = product_detail.find('div', class_='pm-desc').text
-                image = product_detail.find(
-                    'div', class_='pm-middle-content').find(
-                    'div', class_='img-map').find(
-                    'div', class_='photo').find(
-                    'div', class_='show-img').find('img', src=True)['src']
-                parent_lat_lng = detail_soup.find(
-                    'div', class_='body-left').find(
-                    'div', class_='container-default')
-                lat = parent_lat_lng.find('input', {"name": "ctl00$LeftMainContent$_productDetail$hdLat"}).get('value')
-                lng = parent_lat_lng.find('input', {"name": "ctl00$LeftMainContent$_productDetail$hdLong"}).get('value')
+                try:
+                    image = product_detail.find(
+                        'div', class_='pm-middle-content').find(
+                        'div', class_='img-map').find(
+                        'div', class_='photo').find(
+                        'div', class_='show-img').find('img', src=True)['src']
+                except:
+                    pass
+                try:
+                    parent_lat_lng = detail_soup.find(
+                        'div', class_='body-left').find(
+                        'div', class_='container-default')
+                    lat = parent_lat_lng.find('input', {"name": "ctl00$LeftMainContent$_productDetail$hdLat"}).get('value')
+                    lng = parent_lat_lng.find('input', {"name": "ctl00$LeftMainContent$_productDetail$hdLong"}).get('value')
+                except:
+                    pass
 
                 data['title'].append(title)
                 data['estateType'].append(estateType)
@@ -221,12 +227,12 @@ for i in range(1, total_page):
                 data['lng'].append(lng)
 
                 print('------- Done - %s' % title)
-                break
 
     if i % 10 == 0:
         export_table_and_print(data, i)
         free()
         print('***** Done page - %s' % i)
+        break
 
 # TODO: Clear old data when export done
 # export_table_and_print(data)

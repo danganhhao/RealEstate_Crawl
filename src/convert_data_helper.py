@@ -24,6 +24,7 @@ def convertArea(area):
 
 
 def convertPrice(price, area):
+    res = 0
     price = price.replace('\r\n', '').replace('\xa0', '')
     if price == u'Thỏa thuận':
         return 0
