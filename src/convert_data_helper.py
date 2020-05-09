@@ -1,7 +1,7 @@
 def convertEstateType(estateType):
     switcher = {
-        '\r\nBán căn hộ chung cư\r\n': '1',
-        '\r\nBán nhà riêng\r\n': '2',
+        '\r\nBán căn hộ chung cư\r\n': '2',
+        '\r\nBán nhà riêng\r\n': '1',
         '\r\nBán nhà biệt thự, liền kề\r\n': '3',
         '\r\nBán nhà mặt phố\r\n': '4',
         '\r\nBán đất nền dự án\r\n': '5',
