@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from src.define import *
 from src.convert_data_helper import *
 
-start_page = 101
-end_page = 1000
+start_page = 1301
+end_page = 2000
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
@@ -250,7 +250,7 @@ for i in range(start_page, end_page + 1):
         export_table_and_print(data, i)
         free()
         print('***** Done page - %s' % i)
-    if i == end_page:
+    if i == end_page and i % 100 != 0:
         export_table_and_print(data, i)
         free()
         print('***** Done page - %s' % i)
