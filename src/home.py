@@ -6,7 +6,7 @@ from src.define import *
 from src.convert_data_helper import *
 
 start_page = 101
-end_page = 102
+end_page = 1000
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
@@ -111,7 +111,7 @@ if sources.status_code == requests.codes.ok:
 
 ### TEST TEST ###
 total_page = 12
-
+total_count = 0
 for i in range(start_page, end_page + 1):
     URL = f'https://batdongsan.com.vn/nha-dat-ban/p{i}'
 
@@ -246,10 +246,12 @@ for i in range(start_page, end_page + 1):
                 data['lng'].append(lng)
 
     print('------- Done - page %s %s' % (i, count))
+    total_count = total_count + count
     if i % 100 == 0:
         export_table_and_print(data, i)
         free()
-        print('***** Done page - %s' % i)
+        print('***** Done page - %s - %s' % (i, str(total_count)))
+        total_count = 0
     if i == end_page:
         export_table_and_print(data, i)
         free()
