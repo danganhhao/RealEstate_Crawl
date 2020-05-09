@@ -6,7 +6,7 @@ from src.define import *
 from src.convert_data_helper import *
 
 start_page = 1
-end_page = 4
+end_page = 1000
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
@@ -32,7 +32,7 @@ data = {
     'lng': [],
 }
 
-with open('location.json') as f:
+with open('location.json', encoding="utf8") as f:
     location = json.load(f)
 
 
@@ -73,7 +73,7 @@ def export_table_and_print(m_data, index):
     table.to_csv(f'realestate_data_{index}.csv',
                  sep=',', encoding='utf-8', index=False)
     print('Scraping done. Here are the results:')
-    print(table)
+    # print(table)
 
 
 def free():
@@ -239,9 +239,8 @@ for i in range(start_page, end_page + 1):
                 data['lat'].append(lat)
                 data['lng'].append(lng)
 
-                print('------- Done - %s' % title)
-
-    if i % 20 == 0:
+    print('------- Done - page %s' % i)
+    if i % 100 == 0:
         export_table_and_print(data, i)
         free()
         print('***** Done page - %s' % i)
