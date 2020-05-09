@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from src.define import *
 from src.convert_data_helper import *
 
-start_page = 101
-end_page = 102
+start_page = 1001
+end_page = 2000
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
