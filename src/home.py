@@ -5,8 +5,8 @@ from bs4 import BeautifulSoup
 from src.define import *
 from src.convert_data_helper import *
 
-start_page = 1
-end_page = 1000
+start_page = 101
+end_page = 102
 
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
@@ -119,7 +119,9 @@ for i in range(start_page, end_page + 1):
     sources = requests.get(URL)
 
     # Checking if we successfully fetched the URL
+    count = -1
     if sources.status_code == requests.codes.ok:
+        count = 0
         soup = BeautifulSoup(sources.text, 'lxml')
         body = soup.find(
             'div', class_='site-center').find(
@@ -127,7 +129,10 @@ for i in range(start_page, end_page + 1):
             'div', class_='container-default').find(
             'div', class_='Main')
 
-        list_item = body.findAll('div', class_='vip0 search-productItem')
+        for indexVip in range(0, 10):
+            list_item = body.findAll('div', class_=f'vip{indexVip} search-productItem')
+            if len(list_item) > 0:
+                break
         for item in list_item:
             href_url = item.find('a', href=True)['href']
             child_url = BASE_URL + href_url
@@ -135,6 +140,7 @@ for i in range(start_page, end_page + 1):
             # ----- Get detail item------
             detail_sources = requests.get(child_url)
             if detail_sources.status_code == requests.codes.ok:
+                count = count + 1
                 detail_soup = BeautifulSoup(detail_sources.text, 'lxml')
                 # ----------------------
                 title = ''
@@ -239,7 +245,7 @@ for i in range(start_page, end_page + 1):
                 data['lat'].append(lat)
                 data['lng'].append(lng)
 
-    print('------- Done - page %s' % i)
+    print('------- Done - page %s %s' % (i, count))
     if i % 100 == 0:
         export_table_and_print(data, i)
         free()
