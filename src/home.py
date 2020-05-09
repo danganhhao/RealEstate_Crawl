@@ -111,7 +111,7 @@ if sources.status_code == requests.codes.ok:
 
 ### TEST TEST ###
 total_page = 12
-total_count = 0
+
 for i in range(start_page, end_page + 1):
     URL = f'https://batdongsan.com.vn/nha-dat-ban/p{i}'
 
@@ -246,12 +246,10 @@ for i in range(start_page, end_page + 1):
                 data['lng'].append(lng)
 
     print('------- Done - page %s %s' % (i, count))
-    total_count = total_count + count
     if i % 100 == 0:
         export_table_and_print(data, i)
         free()
-        print('***** Done page - %s - %s' % (i, str(total_count)))
-        total_count = 0
+        print('***** Done page - %s' % i)
     if i == end_page:
         export_table_and_print(data, i)
         free()
