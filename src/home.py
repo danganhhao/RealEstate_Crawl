@@ -5,6 +5,9 @@ from bs4 import BeautifulSoup
 from src.define import *
 from src.convert_data_helper import *
 
+start_page = 1
+end_page = 4
+
 total_page = 1
 BASE_URL = 'https://batdongsan.com.vn/nha-dat-ban'
 data = {
@@ -109,7 +112,7 @@ if sources.status_code == requests.codes.ok:
 ### TEST TEST ###
 total_page = 12
 
-for i in range(1, total_page):
+for i in range(start_page, end_page + 1):
     URL = f'https://batdongsan.com.vn/nha-dat-ban/p{i}'
 
     # HTTP GET requests
@@ -238,10 +241,13 @@ for i in range(1, total_page):
 
                 print('------- Done - %s' % title)
 
-    if i % 3 == 0:
+    if i % 20 == 0:
         export_table_and_print(data, i)
         free()
         print('***** Done page - %s' % i)
-        break
+    if i == end_page:
+        export_table_and_print(data, i)
+        free()
+        print('***** Done page - %s' % i)
 
 # export_table_and_print(data)
